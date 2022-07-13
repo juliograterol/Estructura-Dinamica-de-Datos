@@ -62,11 +62,9 @@ void ElegirPosicion(int n, Lista* lista, char *articulo){
 		while (posicion < n && puntero->siguiente){
 			puntero = puntero->siguiente;
 			posicion++;
-		} if (posicion != n){
-			printf ("\n Ningun invitado se encuentra en esta posicion \n El valor se agregara al final de la lista \n");
-			}
-		nodo->siguiente = puntero->siguiente; //Conectamos el nuevo nodo con el nodo que va despues
-		puntero->siguiente = nodo; // Conectamos el nodo con el que le precede
+		}
+		nodo->siguiente = puntero->siguiente;
+		puntero->siguiente = nodo;
 	}
 	lista->espacio++;
 }
@@ -82,7 +80,7 @@ void Eliminar(int n, Lista* lista){
 			lista->articulo = lista->articulo->siguiente;
 			limpiar(eliminado);
 			lista->espacio--;
-			printf ("Se ha eliminado el invitado de la lista\n");
+			printf ("Se ha eliminado el articulo de la lista\n");
 		} else if (n < lista->espacio) {
 			Nodo* puntero = lista->articulo;
 		int posicion = 0;
@@ -94,9 +92,9 @@ void Eliminar(int n, Lista* lista){
 		puntero->siguiente = eliminado->siguiente;
 		limpiar(eliminado);
 		lista->espacio--;	
-		printf ("Se ha eliminado el invitado de la lista\n");
+		printf ("Se ha eliminado el articulo de la lista\n");
 		}else{
-			printf("\n No hay ningun invitado en esta posicion \n");
+			printf("\nNo hay ningun articulo en esta posicion \n");
 		}
 	}
 }
