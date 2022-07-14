@@ -2,117 +2,144 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct ElementoLista {
-    char *dato;
-    struct ElementoLista *siguiente;
-}Elemento;
+int n;
 
-typedef struct ListaUbicacion{
-  Elemento *inicio;
-  Elemento *fin;
-  int tamanio;
-} Cola;
+typedef struct Nodo {
+	int cliente_pago;
+	struct Nodo* siguiente;
+} Nodo;
 
-void inicializacion_cola (Cola * serie){
-  serie->inicio = NULL;
-  serie->fin = NULL;
-  serie->tamanio = 0;
+Nodo* CrearNodo(int *cliente_pago){
+	Nodo* nodo = (Nodo*) malloc (sizeof (Nodo));
+	nodo->cliente_pago=NULL;
+	nodo->siguiente=NULL;
+	return nodo;
 }
 
-int insertar_cola (Cola * serie, Elemento * actual, char *dato){
-  
-  Elemento *nuevo_elemento;
-  
-  if ((nuevo_elemento = (Elemento *) malloc (sizeof (Elemento))) == NULL)
-        return -1;
-  if ((nuevo_elemento->dato = (char *) malloc (50 * sizeof (char)))== NULL)
-        return -1;
-  
-  strcpy (nuevo_elemento->dato, dato);
+typedef struct Cola {
+	Nodo* cliente_pago;
+	int espacio;
+}Cola;
 
-  if(actual == NULL)
-  {
-    if(serie->tamanio == 0)
-    {
-                
-        serie->fin = nuevo_elemento;
-        }
-        nuevo_elemento->siguiente = serie->inicio;
-        serie->inicio = nuevo_elemento;
-  } 
-  else 
-  {
-    if(actual->siguiente == NULL)
-        serie->fin = nuevo_elemento;
-        
-        nuevo_elemento->siguiente = actual->siguiente;
-        actual->siguiente = nuevo_elemento;
-  }
-  serie->tamanio++;
-  return 0;
+struct Cola* CrearCola(){
+	struct Cola* Cola = (struct Cola*) malloc(sizeof(struct Cola));
+	Cola->cliente_pago = NULL;
+	Cola->espacio = 0;
+	return Cola;
 }
 
-int quitar_cola (Cola * serie)
-{
-  Elemento *sup_elemento;
-  
-  if (serie->tamanio == 0)
-    return -1;
-  
-  sup_elemento = serie->inicio;
-  serie->inicio = serie->inicio->siguiente;
-  
-  free (sup_elemento->dato);
-  free (sup_elemento);
-  
-  serie->tamanio--;
-  return 0;
+int espacio(Cola* Cola) {
+	return Cola->espacio;
 }
 
-void imprimir_cola(Cola *serie){
-  Elemento *actual;
-  int i;
-  actual = serie->inicio;
+void LlegaCliente(Cola* Cola, int *cliente_pago){
+	Nodo* nodo = CrearNodo(cliente_pago);
+	nodo->siguiente = Cola->cliente_pago;
+	Cola->cliente_pago = nodo;
+	Cola->espacio++;
+	}
 
-  for(i=0;i<serie->tamanio;++i){
-    printf("%p - %s \n",actual, actual->dato);
-    actual = actual->siguiente;
-  }
+void limpiar(Nodo* nodo) {
+	free(nodo);
+}
+
+void SacarCliente(int n, Cola* Cola){
+	if (Cola->cliente_pago) {
+		if (n == 0) {
+			Nodo* eliminado = Cola->cliente_pago;
+			Cola->cliente_pago = Cola->cliente_pago->siguiente;
+			limpiar(eliminado);
+			Cola->espacio--;
+		}
+		else if (n < Cola->espacio){
+			Nodo* puntero = Cola->cliente_pago;
+		int posicion;
+		while(posicion < (n - 1)) {
+			puntero = puntero->siguiente;
+			posicion++;
+		}
+		Nodo* eliminado = puntero->siguiente;
+		puntero->siguiente = eliminado->siguiente;
+		limpiar(eliminado);
+		Cola->espacio--;
+		}
+	}
 }
 
 
-int main()
-{
-        Cola *serie;
-        inicializacion_cola(serie);
-        
-        insertar_cola (serie, serie->fin, "1");
-        insertar_cola (serie, serie->fin, "2");
-        insertar_cola (serie, serie->fin, "3");
-        insertar_cola (serie, serie->fin, "4");
-        insertar_cola (serie, serie->fin, "5");
-        insertar_cola (serie, serie->fin, "6");
-        insertar_cola (serie, serie->fin, "7");
-        insertar_cola (serie, serie->fin, "8");
-        insertar_cola (serie, serie->fin, "9");
-        
-        
-        imprimir_cola(serie);
-        
 
-        printf("\n");
-        
-        quitar_cola(serie);
-        quitar_cola(serie);
-        quitar_cola(serie);
-        quitar_cola(serie);
-        
-        imprimir_cola(serie);
-        
-        
-        printf("\n");
-        
-        system("pause");
-        
-        return 0;
+int main(){
+	
+	struct Cola* l = CrearCola();
+	int opcion;
+	int cantidad;
+	do{
+		printf("Cantidad de clientes en la Cola (%d) \n", cantidad);
+		printf("Siendo el cajero en una tienda, llega un cliente a pagar por sus productos: \n");
+		printf("1. Ingresar Cliente. \n");
+		printf("2. Sacar Cliente. \n");
+		printf("3. Sacar a todos los clientes. \n");
+		printf("4. Salir. \n");
+		printf("Opcion: ");
+		scanf("%d", &opcion);
+		printf("\n");
+		n == 0;
+		
+	switch(opcion){
+	
+		case 1:{
+			int *cliente_pago;
+			printf("	Introduzca el monto del pago del cliente #%d: ", cantidad+1);
+			scanf ("%s", &cliente_pago);
+			opcion == 0;
+			n++;
+			cantidad++;
+			LlegaCliente(l,cliente_pago);
+			printf("	Cliente y su pago han ingresado en la cola.\n");
+		break;
+		}
+		
+		case 2:{
+			opcion = 0;
+			if(cantidad==0){
+				printf("	No queda ningun cliente por pagar en la cola.\n");
+			}
+			else{
+				SacarCliente(1,l);
+				n--;
+				cantidad--;
+				printf("	El Cliente ha pagado y se ha retirado de la cola.\n");
+			}
+			break;
+		}
+		case 3:{
+			opcion = 0;
+			int cant = 0;
+			do{
+				if(cantidad==0){
+					printf("	No queda ningun cliente por pagar en la cola.\n");
+				}
+				else{
+					SacarCliente(1,l);
+					cant++;
+					n--;
+					cantidad--;
+					printf("	El Cliente #%d ha pagado y se ha retirado de la cola.\n", cant);
+				}
+			}while(cantidad>0);
+			break;
+		}
+		case 4:{
+			printf("El programa ha finalizado");
+			break;
+		}
+		default:{
+			printf("Ha ingresado una opcion invalidad \n");
+			break;
+		}	
+	}
+	printf("\n");
+}while(opcion != 4);
+
+	return 0;
 }
